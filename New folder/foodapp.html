@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background: #35424a;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+nav a {
+    color: #ffffff;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+}
+
+.restaurant {
+    background: #ffffff;
+    padding: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.menu-item {
+    margin: 10px 0;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #35424a;
+    color: #ffffff;
+}
+img{
+height:90px;
+width:90px;
+}
+
+
+</style>
+</head>
+<body>
+    <header>
+        <h1>Food Delivery Website</h1>
+        <nav>
+            <a href="#restaurants">Restaurants</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+            <a href="#login">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="restaurants">
+            <h2>Available Restaurants</h2>
+            <div class="restaurant" onclick="viewMenu('Pasta Place')">
+                <h3>Pasta Place</h3>
+                <p>Italian cuisine</p>
+                 <img src="0.png">
+            </div>
+            <div class="restaurant" onclick="viewMenu('Sushi Spot')">
+                <h3>Sushi Spot</h3>
+                <p>Japanese cuisine</p>
+                 <img src="1.png">
+            </div>
+        </section>
+
+        <section id="menu" style="display: none;">
+            <h2 id="menuTitle"></h2>
+            <div class="menu-item">
+                 <img src="X.jpg">
+                <span>Spaghetti</span>
+                <button onclick="addToCart('Spaghetti', 10)">Add to Cart - $10</button>
+            </div>
+            <div class="menu-item">
+                 <img src="Y.jpg">
+                <span>Lasagna</span>
+                <button onclick="addToCart('Lasagna', 12)">Add to Cart - $12</button>
+            </div>
+            <div class="menu-item">
+                   <img src="th.jpg">
+                <span>Sushi Roll</span>
+                <button onclick="addToCart('Sushi Roll', 8)">Add to Cart - $8</button>
+            </div>
+            <div class="menu-item">
+                 <img src="N.jpg">
+                <span>Sashimi</span>
+                <button onclick="addToCart('Sashimi', 15)">Add to Cart - $15</button>
+            
+        </section>
+
+        <section id="cart">
+            <h2>Your Cart</h2>
+            <div id="cartItems"></div>
+            <p id="totalPrice">Total: $0</p>
+            <button onclick="placeOrder()">Place Order</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Food Delivery</p>
+    </footer>
+ <script>
+       let cart = [];
+let total = 0;
+
+function viewMenu(restaurantName) {
+    document.getElementById('menuTitle').innerText = restaurantName + " Menu";
+    document.getElementById('restaurants').style.display = 'none';
+    document.getElementById('menu').style.display = 'block';
+}
+
+function addToCart(item, price) {
+    cart.push({ item, price });
+    total += price;
+    updateCart();
+}
+
+function updateCart() {
+    const cartItems = document.getElementById('cartItems');
+    cartItems.innerHTML = '';
+    cart.forEach((cartItem, index) => {
+        cartItems.innerHTML += `<div>${cartItem.item} - $${cartItem.price} <button onclick="removeFromCart(${index})">Remove</button></div>`;
+    });
+    document.getElementById('totalPrice').innerText = 'Total: $' + total;
+}
+
+function removeFromCart(index) {
+    total -= cart[index].price;
+    cart.splice(index, 1);
+    updateCart();
+}
+
+function placeOrder() {
+    if (cart.length > 0) {
+        alert('Order placed successfully!');
+        cart = [];
+        total = 0;
+        updateCart();
+        document.getElementById('restaurants').style.display = 'block';
+        document.getElementById('menu').style.display = 'none';
+    } else {
+        alert('Your cart is empty!');
+    }
+}
+
+</script>
+</body>
+</html>
