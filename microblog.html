@@ -1,1 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microblog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4; /* Light gray background */
+        }
+        .container {
+            max-width: 600px;
+            background-color: #ffffff; /* White background for the container */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+        #inputField {
+            width: calc(100% - 100px);
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 4px; /* Rounded corners */
+            display: inline-block;
+        }
+        #addPost {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745; /* Green background for the button */
+            color: white; /* White text */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            display: inline-block;
+        }
+        #addPost:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+        .emoji-button {
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+        }
+        .post {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px; /* Rounded corners */
+            background-color: #f9f9f9; /* Light background for posts */
+        }
+        .like-button, .dislike-button, .like-comment-button, .dislike-comment-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .like-button {
+            color: blue;
+        }
+        .dislike-button {
+            color: red;
+        }
+        .comment-section {
+            margin-top: 10px;
+        }
+        .comment-input {
+            width: calc(80% - 90px);
+            padding: 5px;
+            margin-right: 5px;
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 4px; /* Rounded corners */
+            display: inline-block;
+        }
+        .comment-button {
+            padding: 5px;
+            cursor: pointer;
+            background-color: #007bff; /* Blue background for comment button */
+            color: white; /* White text */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+        }
+        .comment-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .comment {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .comment-actions {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Microblog</h1>
+    <div class="container">
+        <input id="inputField" type="text" placeholder="What's on your mind?">
+        <button id="addPost">Post</button>
+        <span class="emoji-button" onclick="addEmoji('😊')">😊</span>
+        <span class="emoji-button" onclick="addEmoji('❤️')">❤️</span>
+        <span class="emoji-button" onclick="addEmoji('😂')">😂</span>
+        <span class="emoji-button" onclick="addEmoji('😢')">😢</span>
+        <div id="postContainer"></div>
+    </div>
 
+    <script>
+        const addPostButton = document.getElementById('addPost');
+        const postContainer = document.getElementById('postContainer');
+        const inputField = document.getElementById('inputField');
+
+        const addEmoji = (emoji) => {
+            inputField.value += emoji; // Add selected emoji to input field
+            inputField.focus(); // Keep focus on input field
+        };
+
+        addPostButton.addEventListener('click', function() {
+            const postText = inputField.value.trim();
+            if (postText === "") return; // Prevent empty posts
+
+            const postDiv = document.createElement('div');
+            postDiv.classList.add('post');
+            postDiv.innerHTML = `
+                <p>${postText}</p>
+                <button class="like-button">Like (<span class="like-count">0</span>)</button>
+                <button class="dislike-button">Dislike (<span class="dislike-count">0</span>)</button>
+                <div class="comment-section">
+                    <input type="text" class="comment-input" placeholder="Add a comment...">
+                    <button class="comment-button">Comment</button>
+                </div>
+                <div class="comments"></div>
+                <p>Comments: <span class="comment-count">0</span></p>
+            `;
+            postContainer.appendChild(postDiv);
+            inputField.value = "";
+
+            const likeButton = postDiv.querySelector('.like-button');
+            const likeCount = postDiv.querySelector('.like-count');
+            const dislikeButton = postDiv.querySelector('.dislike-button');
+            const dislikeCount = postDiv.querySelector('.dislike-count');
+            const commentInput = postDiv.querySelector('.comment-input');
+            const commentButton = postDiv.querySelector('.comment-button');
+            const commentsContainer = postDiv.querySelector('.comments');
+            const commentCount = postDiv.querySelector('.comment-count');
+
+            likeButton.addEventListener('click', function() {
+                const currentCount = parseInt(likeCount.innerText);
+                likeCount.innerText = currentCount + 1; // Increment the like count
+            });
+
+            dislikeButton.addEventListener('click', function() {
+                const currentCount = parseInt(dislikeCount.innerText);
+                dislikeCount.innerText = currentCount + 1; // Increment the dislike count
+            });
+
+            commentButton.addEventListener('click', function() {
+                const commentText = commentInput.value.trim();
+                if (commentText === "") return; // Prevent empty comments
+
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment');
+                commentDiv.innerHTML = `
+                    <span>${commentText}</span>
+                    <div class="comment-actions">
+                        <button class="like-comment-button">Like (<span class="comment-like-count">0</span>)</button>
+                        <button class="dislike-comment-button">Dislike (<span class="comment-dislike-count">0</span>)</button>
+                    </div>
+                `;
+                commentsContainer.appendChild(commentDiv);
+                commentInput.value = ""; // Clear the input
+
+                // Update comment count
+                const currentCommentCount = parseInt(commentCount.innerText);
+                commentCount.innerText = currentCommentCount + 1;
+
+                const likeCommentButton = commentDiv.querySelector('.like-comment-button');
+                const commentLikeCount = commentDiv.querySelector('.comment-like-count');
+                const dislikeCommentButton = commentDiv.querySelector('.dislike-comment-button');
+                const commentDislikeCount = commentDiv.querySelector('.comment-dislike-count');
+
+                likeCommentButton.addEventListener('click', function() {
+                    const currentCommentLikeCount = parseInt(commentLikeCount.innerText);
+                    commentLikeCount.innerText = currentCommentLikeCount + 1; // Increment the like count for the comment
+                });
+
+                dislikeCommentButton.addEventListener('click', function() {
+                    const currentCommentDislikeCount = parseInt(commentDislikeCount.innerText);
+                    commentDislikeCount.innerText = currentCommentDislikeCount + 1; // Increment the dislike count for the comment
+                });
+            });
+        });
+    </script>
+</body>
+</html>
