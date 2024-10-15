@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classifieds - Buy & Sell Used Products</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Classifieds</h1>
+        <button id="addListingBtn">Add Listing</button>
+    </header>
+
+    <main>
+        <div id="listingForm" class="hidden">
+            <h2>Add a New Listing</h2>
+            <form id="newListingForm">
+                <input type="text" id="itemName" placeholder="Item Name" required>
+                <input type="text" id="itemDescription" placeholder="Description" required>
+                <input type="number" id="itemPrice" placeholder="Price" required>
+                <button type="submit">Add Listing</button>
+                <button type="button" id="cancelBtn">Cancel</button>
+            </form>
+        </div>
+
+        <div id="listings">
+            <h2>Available Listings</h2>
+            <ul id="listingContainer"></ul>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
